@@ -1,3 +1,5 @@
+import http from "http";
+import WebSocket from "ws";
 import express from "express";
 
 const app = express();
@@ -9,6 +11,11 @@ app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (req, res) => res.render("home"));
 app.get("/*", (req, res) => res.redirect("/")); // 다른 url로 접근해도 "/"로 리다이렉트 해줌
 
-app.listen("3000", () => {
-  console.log("Listening on 3000");
+// HTTP 서버 위에서 WebSocket 서버를 만듦(Not mandatory: ws 서버만 만들어도 됨)
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+server.listen(3000, () => {
+  // 같은 포트에서 두 프로토콜을 모두 사용할 수 있음
+  console.log("Listening on http://localhost:3000");
 });
