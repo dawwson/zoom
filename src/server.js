@@ -1,3 +1,5 @@
+// 서버 사이드 JS
+
 import http from "http";
 import WebSocket from "ws";
 import express from "express";
@@ -14,6 +16,11 @@ app.get("/*", (req, res) => res.redirect("/")); // 다른 url로 접근해도 "/
 // HTTP 서버 위에서 WebSocket 서버를 만듦(Not mandatory: ws 서버만 만들어도 됨)
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+
+wss.on("connection", (socket) => {
+  // socket = 연결된 브라우저
+  console.log(socket);
+});
 
 server.listen(3000, () => {
   // 같은 포트에서 두 프로토콜을 모두 사용할 수 있음
