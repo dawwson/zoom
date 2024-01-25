@@ -18,8 +18,21 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (socket) => {
-  // socket = 연결된 브라우저
-  console.log(socket);
+  // socket = 연결된 브라우저 정보를 담은 객체
+  console.log("Connected to Browser ✅");
+
+  socket.on("close", () => {
+    // 브라우저 창을 닫아버리서 연결이 종료되면 실행
+    console.log("Disconnected from the Browser ❌");
+  });
+
+  socket.on("message", (message) => {
+    // 연결된 브라우저로부터 메세지를 받으면 실행
+    console.log(message.toString());
+  });
+
+  // 메세지 전송
+  socket.send("hello from server");
 });
 
 server.listen(3000, () => {
