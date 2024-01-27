@@ -1,7 +1,7 @@
 // 서버 사이드 JS
 
 import http from "http";
-import WebSocket from "ws";
+import SocketIO from "socket.io";
 import express from "express";
 
 const app = express();
@@ -14,7 +14,13 @@ app.get("/", (req, res) => res.render("home"));
 app.get("/*", (req, res) => res.redirect("/")); // 다른 url로 접근해도 "/"로 리다이렉트 해줌
 
 // HTTP 서버 위에서 WebSocket 서버를 만듦(Not mandatory: ws 서버만 만들어도 됨)
-const server = http.createServer(app);
+const httpServer = http.createServer(app);
+const wsServer = SocketIO(httpServer);
+
+wsServer.on("connection", (socket) => {
+  console.log(socket);
+});
+/*
 const wss = new WebSocket.Server({ server });
 
 // 받은 메세지를 연결된 소켓에게 모두 전달해주기 위해 저장함
@@ -50,8 +56,9 @@ wss.on("connection", (socket) => {
     }
   });
 });
+*/
 
-server.listen(3000, () => {
+httpServer.listen(3000, () => {
   // 같은 포트에서 두 프로토콜을 모두 사용할 수 있음
   console.log("Listening on http://localhost:3000");
 });

@@ -1,4 +1,8 @@
 // 클라이언트 사이드 JS
+
+const socket = io();
+
+/*
 const nicknameForm = document.querySelector("#nickname");
 const messageForm = document.querySelector("#message");
 const messageList = document.querySelector("ul");
@@ -56,3 +60,4 @@ function handleMessageSubmit(event) {
 
 nicknameForm.addEventListener("submit", handleNicknameSubmit);
 messageForm.addEventListener("submit", handleMessageSubmit);
+*/
