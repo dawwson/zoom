@@ -32,7 +32,19 @@ wss.on("connection", (socket) => {
 
   socket.on("message", (message) => {
     // 연결된 브라우저로부터 메세지를 받으면 실행
-    sockets.forEach((socket) => socket.send(message.toString()));
+    const { type, payload } = JSON.parse(message.toString());
+
+    switch (type) {
+      case "nickname":
+        socket["nickname"] = payload;
+        break;
+      case "newMessage":
+        sockets.forEach((anotherSocket) => {
+          const messageToAll = `${socket.nickname}: ${payload}`;
+          anotherSocket.send(messageToAll);
+        });
+        break;
+    }
   });
 });
 

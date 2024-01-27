@@ -1,10 +1,15 @@
 // 클라이언트 사이드 JS
-
+const nicknameForm = document.querySelector("#nickname");
+const messageForm = document.querySelector("#message");
 const messageList = document.querySelector("ul");
-const messageForm = document.querySelector("form");
 
 // socket = 서버로의 연결
 const socket = new WebSocket(`ws://${window.location.host}`);
+
+function makeMessage(type, payload) {
+  const message = { type, payload };
+  return JSON.stringify(message);
+}
 
 socket.addEventListener("open", () => {
   // 연결이 열리면 실행
@@ -23,11 +28,31 @@ socket.addEventListener("close", () => {
   console.log("Disconnected from Server ❌");
 });
 
-function handleSubmit(event) {
+function handleNicknameSubmit(event) {
+  // 브라우저 기본 동작(새로고침) 방지
   event.preventDefault();
 
-  const input = messageForm.querySelector("input");
-  socket.send(input.value);
+  // 입력값 백엔드로 전송
+  const input = nicknameForm.querySelector("input");
+  const message = makeMessage("nickname", input.value);
+  socket.send(message);
+
+  // 입력창 초기화
   input.value = "";
 }
-messageForm.addEventListener("submit", handleSubmit);
+
+function handleMessageSubmit(event) {
+  // 브라우저 기본 동작(새로고침) 방지
+  event.preventDefault();
+
+  // 입력값 백엔드로 전송
+  const input = messageForm.querySelector("input");
+  const message = makeMessage("newMessage", input.value);
+  socket.send(message);
+
+  // 입력창 초기화
+  input.value = "";
+}
+
+nicknameForm.addEventListener("submit", handleNicknameSubmit);
+messageForm.addEventListener("submit", handleMessageSubmit);
