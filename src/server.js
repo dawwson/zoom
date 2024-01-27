@@ -35,11 +35,14 @@ wss.on("connection", (socket) => {
     const { type, payload } = JSON.parse(message.toString());
 
     switch (type) {
+      // nickname에 대한 메세지면 연결된 socket에 nickname property 지정
       case "nickname":
         socket["nickname"] = payload;
         break;
+      // 새로운 메세지면 연결된 모든 socket으로 메세지 전송
       case "newMessage":
         sockets.forEach((anotherSocket) => {
+          // 메세지를 보낸 socket의 nickname과 함께 전송
           const messageToAll = `${socket.nickname}: ${payload}`;
           anotherSocket.send(messageToAll);
         });
