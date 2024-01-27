@@ -13,7 +13,9 @@ socket.addEventListener("open", () => {
 
 socket.addEventListener("message", (message) => {
   // 연결된 서버로부터 메세지를 받으면 실행
-  console.log("New message: ", message.data);
+  const li = document.createElement("li");
+  li.innerText = message.data;
+  messageList.append(li);
 });
 
 socket.addEventListener("close", () => {
@@ -26,5 +28,6 @@ function handleSubmit(event) {
 
   const input = messageForm.querySelector("input");
   socket.send(input.value);
+  input.value = "";
 }
 messageForm.addEventListener("submit", handleSubmit);
