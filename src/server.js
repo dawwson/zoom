@@ -17,8 +17,12 @@ app.get("/*", (req, res) => res.redirect("/")); // 다른 url로 접근해도 "/
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+// 받은 메세지를 연결된 소켓에게 모두 전달해주기 위해 저장함
+const sockets = [];
+
 wss.on("connection", (socket) => {
   // socket = 연결된 브라우저 정보를 담은 객체
+  sockets.push(socket);
   console.log("Connected to Browser ✅");
 
   socket.on("close", () => {
@@ -28,11 +32,8 @@ wss.on("connection", (socket) => {
 
   socket.on("message", (message) => {
     // 연결된 브라우저로부터 메세지를 받으면 실행
-    console.log(message.toString());
+    sockets.forEach((socket) => socket.send(message.toString()));
   });
-
-  // 메세지 전송
-  socket.send("hello from server");
 });
 
 server.listen(3000, () => {

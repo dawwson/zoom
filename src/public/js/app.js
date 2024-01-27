@@ -1,5 +1,8 @@
 // 클라이언트 사이드 JS
 
+const messageList = document.querySelector("ul");
+const messageForm = document.querySelector("form");
+
 // socket = 서버로의 연결
 const socket = new WebSocket(`ws://${window.location.host}`);
 
@@ -10,7 +13,7 @@ socket.addEventListener("open", () => {
 
 socket.addEventListener("message", (message) => {
   // 연결된 서버로부터 메세지를 받으면 실행
-  console.log("Just got this: ", message, " from the server");
+  console.log("New message: ", message.data);
 });
 
 socket.addEventListener("close", () => {
@@ -18,7 +21,10 @@ socket.addEventListener("close", () => {
   console.log("Disconnected from Server ❌");
 });
 
-// 5초 후에 메세지 전송
-setTimeout(() => {
-  socket.send("hello from the browser");
-}, 5000);
+function handleSubmit(event) {
+  event.preventDefault();
+
+  const input = messageForm.querySelector("input");
+  socket.send(input.value);
+}
+messageForm.addEventListener("submit", handleSubmit);
